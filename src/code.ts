@@ -6,6 +6,11 @@ interface Activity {
   startTime: number;
 }
 
+function doGet(e: any) {
+  return HtmlService.createHtmlOutputFromFile('index.html')
+    .setTitle("LifeLog");
+}
+
 function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | null {
   let cal = CalendarApp.getDefaultCalendar();
   let now = new Date();
