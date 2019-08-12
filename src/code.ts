@@ -1,6 +1,5 @@
 import { CALENDAR_ID } from './config'
 
-const targetCalendar: string = 'Activity';
 interface Activity {
   title: string;
   startTime: number;
@@ -11,7 +10,7 @@ function doGet(e: any) {
     .setTitle("LifeLog");
 }
 
-function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | null {
+function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | undefined {
   let cal = CalendarApp.getDefaultCalendar();
   let now = new Date();
   let oneDayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
@@ -25,17 +24,17 @@ function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | null {
   if (res.length > 0) {
     return res;
   } else {
-    return null;
+    return undefined;
   }
 }
 
-function getCurrentActivity(): Activity | null {
+function getCurrentActivity(): Activity | undefined {
   const properties = PropertiesService.getScriptProperties();
   const currentActivity = properties.getProperties();
   if (currentActivity) {
     return JSON.parse(currentActivity);
   } else {
-    return null;
+    return undefined;
   }
 }
 
@@ -46,7 +45,7 @@ function registerCurrentActivity(activity: Activity): void {
 
 function testCalApi(): void {
   let nextTasks = getNextTasks();
-  if (nextTasks == null) {
+  if (nextTasks == undefined) {
     Logger.log("Not Found");
   } else {
     Logger.log(nextTasks[0].getTitle());
