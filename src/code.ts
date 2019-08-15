@@ -5,9 +5,15 @@ interface Activity {
   startTime: number;
 }
 
+interface Task {
+  title: string;
+  startTime: number;
+  endTime: number;
+  color: string;
+}
+
 function doGet(e: any) {
-  return HtmlService.createHtmlOutputFromFile('index.html')
-    .setTitle("LifeLog");
+  return HtmlService.createHtmlOutputFromFile('index.html').setTitle('LifeLog');
 }
 
 function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | undefined {
@@ -17,7 +23,7 @@ function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | undefined {
   let events = cal.getEvents(now, oneDayFromNow);
   let res: any[] = [];
   for (let ev of events) {
-    if(!ev.isAllDayEvent()) {
+    if (!ev.isAllDayEvent()) {
       res.push(ev);
     }
   }
@@ -28,9 +34,34 @@ function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | undefined {
   }
 }
 
+function parseTask(event: GoogleAppsScript.Calendar.CalendarEvent): Task {
+  let title = event.getTitle();
+  if (!title) {
+    title = '';
+  }
+  return {
+    title: title,
+    startTime: event.getStartTime().getTime(),
+    endTime: event.getEndTime().getTime(),
+    color: event.getColor()
+  };
+}
+
+function fetchTasks(): Task[] {
+  let res: Task[] = [];
+  const tasks = getNextTasks();
+  if (!tasks) {
+    return res;
+  }
+  for (let task of tasks) {
+    res.push(parseTask(task));
+  }
+  return res;
+}
+
 function getCurrentActivity(): Activity | undefined {
   const properties = PropertiesService.getScriptProperties();
-  const currentActivity = properties.getProperties();
+  const currentActivity = properties.getProperty('CURRENT_ACTIVITY');
   if (currentActivity) {
     return JSON.parse(currentActivity);
   } else {
@@ -46,8 +77,16 @@ function registerCurrentActivity(activity: Activity): void {
 function testCalApi(): void {
   let nextTasks = getNextTasks();
   if (nextTasks == undefined) {
-    Logger.log("Not Found");
+    Logger.log('Not Found');
   } else {
     Logger.log(nextTasks[0].getTitle());
   }
+}
+
+function testFetchTasks(): void {
+  Logger.log(fetchTasks());
+}
+
+function testGetActivity(): void {
+  Logger.log(getCurrentActivity());
 }
