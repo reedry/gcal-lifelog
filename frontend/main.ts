@@ -3,7 +3,10 @@ import Vue from 'vue';
 const app = new Vue({
   el: '#app',
   data: {
-    activity: {},
+    activity: {
+      title: '',
+      startTime: 0
+    },
     form: {
       activity: {
         title: ''
@@ -41,6 +44,20 @@ const app = new Vue({
         startTime: new Date().getTime()
       });
       this.loadAll();
+    },
+    async finishActivity() {
+      const res = await callFunction('recordActivity', {
+        title: this.activity.title,
+        startTime: this.activity.startTime,
+        endTime: new Date().getTime()
+      });
+      // TODO: the function below does not work.
+      // if you call deleteActivity() solely, it does work correctly
+      await this.deleteActivity();
+    },
+    async deleteActivity() {
+      const res = await callFunction('deleteCurrentActivity');
+      this.state.hasActivity = false;
     }
   }
 });

@@ -74,6 +74,27 @@ function registerCurrentActivity(activity: Activity): void {
   properties.setProperty('CURRENT_ACTIVITY', JSON.stringify(activity));
 }
 
+function recordActivity(activity: Task): void {
+  const cal = getActivityCalendar();
+  const event = cal.createEvent(
+    activity.title,
+    new Date(activity.startTime),
+    new Date(activity.endTime)
+  );
+  if (activity.color != '') {
+    event.setColor(activity.color);
+  }
+}
+
+function getActivityCalendar(): GoogleAppsScript.Calendar.Calendar {
+  return CalendarApp.getCalendarById(CALENDAR_ID.plan);
+}
+
+function deleteCurrentActivity(): void {
+  const properties = PropertiesService.getScriptProperties();
+  properties.deleteProperty('CURRENT_ACTIVITY');
+}
+
 function testCalApi(): void {
   let nextTasks = getNextTasks();
   if (nextTasks == undefined) {
