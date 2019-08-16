@@ -10,12 +10,14 @@
       <p>{{ state.hasActivity }}</p>
       <div v-if="state.hasActivity">
         title: {{ activity.title }}, start: {{ new Date(activity.startTime) }}
+        <button v-on:click="finishActivity">finish</button>
       </div>
       <div v-else>
         <input v-model="form.activity.title" placeholder="type title...">
-        <button v-on:click="startActivity">submit</button>
+        <button v-on:click="startActivity">start</button>
         <p>Title is: {{ form.activity.title }}</p>
       </div>
+      <button v-on:click="deleteActivity">delete</button>
     </div>
     <div>
       <ol>
