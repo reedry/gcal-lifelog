@@ -45,19 +45,20 @@ const app = new Vue({
       });
       this.loadAll();
     },
+    stopActivity: function() {
+      this.finishActivity();
+      this.deleteActivity();
+    },
+    async deleteActivity() {
+      const res = await callFunction('deleteCurrentActivity');
+      this.state.hasActivity = false;
+    },
     async finishActivity() {
       const res = await callFunction('recordActivity', {
         title: this.activity.title,
         startTime: this.activity.startTime,
         endTime: new Date().getTime()
       });
-      // TODO: the function below does not work.
-      // if you call deleteActivity() solely, it does work correctly
-      await this.deleteActivity();
-    },
-    async deleteActivity() {
-      const res = await callFunction('deleteCurrentActivity');
-      this.state.hasActivity = false;
     }
   }
 });
