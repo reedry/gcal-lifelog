@@ -111,3 +111,18 @@ function testFetchTasks(): void {
 function testGetActivity(): void {
   Logger.log(getCurrentActivity());
 }
+
+function testColorNames(): void {
+  const cal = CalendarApp.getCalendarById(CALENDAR_ID.test);
+  const events = cal.getEventsForDay(new Date('2019-08-20'));
+  let res = [];
+  for (let ev of events) {
+    res.push({ color: ev.getColor(), title: ev.getTitle() });
+  }
+  res.sort(function(a, b) {
+    return parseInt(a.color) - parseInt(b.color);
+  });
+  for (let it of res) {
+    Logger.log('color:' + it.color + ', title:' + it.title);
+  }
+}
