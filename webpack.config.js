@@ -9,6 +9,9 @@ module.exports = {
   entry: './main.ts',
   mode: 'development',
   devtool: 'inline-source-map',
+  externals: {
+    'vuetify/dist/vuetify.min.css': 'undefined'
+  },
   output: {
     filename: 'bundle.inline-js'
   },
@@ -41,6 +44,12 @@ module.exports = {
           name: "vue",
           var: "Vue",
           path: "dist/vue.min.js"
+        },
+        {
+          name: "vuetify",
+          var: "Vuetify",
+          path: "dist/vuetify.min.js",
+          style: "dist/vuetify.min.css"
         }
       ]
     })
