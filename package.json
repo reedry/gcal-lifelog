@@ -12,7 +12,8 @@
   "dependencies": {
     "@types/google-apps-script": "0.0.55",
     "@types/google.script.client-side": "^0.1.0",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vuetify": "^2.0.17"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^5.0.4",

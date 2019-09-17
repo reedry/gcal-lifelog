@@ -6,25 +6,32 @@
 </head>
 <body>
   <div id="app">
-    <div>
-      <div v-if="state.hasActivity">
-        title: {{ activity.title }}, start: {{ new Date(activity.startTime) }}
-        <button v-on:click="stopActivity">stop</button>
-      </div>
-      <div v-else>
-        <input v-model="form.activity.title" placeholder="type title...">
-        <button v-on:click="startActivity">start</button>
-        <p>Title is: {{ form.activity.title }}</p>
-      </div>
-    </div>
-    <div>
-      <p>Tasks in a day</p>
-      <ol>
-        <li v-for="task in tasks">
-          {{ task.title }}
-        </li>
-      </ol>
-    </div>
+    <v-app>
+      <v-content>
+        <v-container>
+          <div v-if="state.hasActivity">
+            title: {{ activity.title }}, start: {{ new Date(activity.startTime) }}
+            <v-btn v-on:click="stopActivity">stop</v-btn>
+          </div>
+          <div v-else>
+            <input v-model="form.activity.title" placeholder="type title...">
+            <v-btn v-on:click="startActivity">start</v-btn>
+            <p>Title is: {{ form.activity.title }}</p>
+          </div>
+        </v-container>
+        <v-container>
+          <p>Tasks in a day</p>
+          <ol>
+            <li v-for="task in tasks">
+              {{ task.title }}
+            </li>
+          </ol>
+        </v-container>
+        <div class="text-center">
+          <v-btn>Button</v-btn>
+        </div>
+      </v-content>
+    </v-app>
   </div>
 </body>
 </html>
