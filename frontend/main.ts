@@ -4,28 +4,50 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
+const COLORS: {id: string, name: string, code: string }[] = [
+  { id: '1', name:'ラベンダー', code: '#7986CB' },
+  { id: '2', name:'セージ', code: '#33B679' },
+  { id: '3', name:'ブドウ', code: '#8E24AA' },
+  { id: '4', name:'フラミンゴ', code: '#E67C73' },
+  { id: '5', name:'バナナ', code: '#F6BF26' },
+  { id: '6', name:'ミカン', code: '#F4511E' },
+  { id: '7', name:'ピーコック', code: '#039BE5' },
+  { id: '8', name:'グラファイト', code: '#616161' },
+  { id: '9', name:'ブルーベリー（デフォルト）', code: '#3F51B5' },
+  { id: '10', name:'バジル', code: '#0B8043'},
+  { id: '11', name:'トマト', code: '#D50000'},
+];
+
+
 const app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data: {
     activity: {
       title: '',
-      startTime: 0
+      startTime: 0,
+      color: '9'
     },
     form: {
       activity: {
-        title: ''
+        title: '',
+        color: '9'
       }
     },
     tasks: [{ title: 'prev1' }, { title: 'prev2' }],
     state: {
       hasActivity: false
-    }
+    },
+    colors: COLORS,
   },
   created: function() {
     this.loadAll();
   },
   methods: {
+    clearForm: function() {
+      this.form.activity.title = '';
+      this.form.activity.color = '9';
+    },
     loadAll: function() {
       this.loadTasks();
       this.loadActivity();
@@ -46,7 +68,8 @@ const app = new Vue({
     async startActivity() {
       const res = await callFunction('registerCurrentActivity', {
         title: this.form.activity.title,
-        startTime: new Date().getTime()
+        startTime: new Date().getTime(),
+        color: this.form.activity.color
       });
       this.loadAll();
     },
@@ -62,7 +85,8 @@ const app = new Vue({
       const res = await callFunction('recordActivity', {
         title: this.activity.title,
         startTime: this.activity.startTime,
-        endTime: new Date().getTime()
+        endTime: new Date().getTime(),
+        color: this.activity.color
       });
     }
   }

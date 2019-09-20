@@ -9,27 +9,39 @@
     <v-app>
       <v-content>
         <v-container>
-          <div v-if="state.hasActivity">
-            title: {{ activity.title }}, start: {{ new Date(activity.startTime) }}
-            <v-btn v-on:click="stopActivity">stop</v-btn>
-          </div>
-          <div v-else>
-            <input v-model="form.activity.title" placeholder="type title...">
-            <v-btn v-on:click="startActivity">start</v-btn>
-            <p>Title is: {{ form.activity.title }}</p>
-          </div>
+          <v-row justify="center">
+            <div v-if="state.hasActivity">
+              title: {{ activity.title }}, start: {{ new Date(activity.startTime) }}
+              <v-btn v-on:click="stopActivity">stop</v-btn>
+            </div>
+            <div v-else>
+              <v-text-field
+                v-model="form.activity.title"
+                placeholder="Type title..."
+                label="Activity title"
+              ></v-text-field>
+              <v-select
+                v-model="form.activity.color"
+                :items="colors"
+                item-text="name"
+                item-value="id"
+                label="Color"
+              ></v-select>
+              <v-btn v-on:click="startActivity">Start</v-btn>
+              <v-btn v-on:click="clearForm">Clear</v-btn>
+            </div>
+          </v-row>
+          <v-row justify="center">
+            <div>
+              <p>Tasks in a day</p>
+              <ol>
+                <li v-for="task in tasks">
+                  {{ task.title }}
+                </li>
+              </ol>
+            </div>
+          </v-row>
         </v-container>
-        <v-container>
-          <p>Tasks in a day</p>
-          <ol>
-            <li v-for="task in tasks">
-              {{ task.title }}
-            </li>
-          </ol>
-        </v-container>
-        <div class="text-center">
-          <v-btn>Button</v-btn>
-        </div>
       </v-content>
     </v-app>
   </div>
