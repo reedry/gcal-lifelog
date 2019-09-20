@@ -13,7 +13,9 @@ interface Task {
 }
 
 function doGet(e: any) {
-  return HtmlService.createHtmlOutputFromFile('index.html').setTitle('LifeLog');
+  return HtmlService.createHtmlOutputFromFile('index.html')
+    .setTitle('LifeLog')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
 function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | undefined {
