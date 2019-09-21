@@ -5,19 +5,32 @@ import 'vuetify/dist/vuetify.min.css';
 Vue.use(Vuetify);
 
 const COLORS: {id: string, name: string, code: string }[] = [
-  { id: '1', name:'ラベンダー', code: '#7986CB' },
-  { id: '2', name:'セージ', code: '#33B679' },
-  { id: '3', name:'ブドウ', code: '#8E24AA' },
-  { id: '4', name:'フラミンゴ', code: '#E67C73' },
-  { id: '5', name:'バナナ', code: '#F6BF26' },
-  { id: '6', name:'ミカン', code: '#F4511E' },
-  { id: '7', name:'ピーコック', code: '#039BE5' },
-  { id: '8', name:'グラファイト', code: '#616161' },
-  { id: '9', name:'ブルーベリー（デフォルト）', code: '#3F51B5' },
-  { id: '10', name:'バジル', code: '#0B8043'},
-  { id: '11', name:'トマト', code: '#D50000'},
+  { id: '1', name:'Lavender', code: '#7986CB' },
+  { id: '2', name:'Sage', code: '#33B679' },
+  { id: '3', name:'Grape', code: '#8E24AA' },
+  { id: '4', name:'Flamingo', code: '#E67C73' },
+  { id: '5', name:'Banana', code: '#F6BF26' },
+  { id: '6', name:'Mikan', code: '#F4511E' },
+  { id: '7', name:'Peacock: Study (Hobby)', code: '#039BE5' },
+  { id: '8', name:'Graphite: Study', code: '#616161' },
+  { id: '9', name:'Blueberry: Default', code: '#3F51B5' },
+  { id: '10', name:'Basil', code: '#0B8043'},
+  { id: '11', name:'Tomato', code: '#D50000'},
 ];
 
+const COLOR_CODES = {
+  '1': '#7986CB',
+  '2': '#33B679',
+  '3': '#8E24AA',
+  '4': '#E67C73',
+  '5': '#F6BF26',
+  '6': '#F4511E',
+  '7': '#039BE5',
+  '8': '#616161',
+  '9': '#3F51B5',
+  '10': '#0B8043',
+  '11': '#D50000',
+};
 
 const app = new Vue({
   el: '#app',
@@ -39,6 +52,7 @@ const app = new Vue({
       hasActivity: false
     },
     colors: COLORS,
+    codes: COLOR_CODES
   },
   created: function() {
     this.loadAll();
