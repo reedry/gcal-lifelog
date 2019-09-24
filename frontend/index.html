@@ -53,6 +53,11 @@
               </ol>
             </div>
           </v-row>
+          <v-row justify="center">
+              Study Hours:
+               {{ studyHour.hour | zero_padding }}h
+               {{ studyHour.minute | zero_padding }}m
+          </v-row>
         </v-container>
       </v-content>
     </v-app>

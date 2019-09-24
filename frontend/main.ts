@@ -4,18 +4,27 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
-const COLORS: {id: string, name: string, code: string }[] = [
-  { id: '1', name:'Lavender', code: '#7986CB' },
-  { id: '2', name:'Sage', code: '#33B679' },
-  { id: '3', name:'Grape', code: '#8E24AA' },
-  { id: '4', name:'Flamingo', code: '#E67C73' },
-  { id: '5', name:'Banana', code: '#F6BF26' },
-  { id: '6', name:'Mikan', code: '#F4511E' },
-  { id: '7', name:'Peacock: Study (Hobby)', code: '#039BE5' },
-  { id: '8', name:'Graphite: Study', code: '#616161' },
-  { id: '9', name:'Blueberry: Default', code: '#3F51B5' },
-  { id: '10', name:'Basil', code: '#0B8043'},
-  { id: '11', name:'Tomato', code: '#D50000'},
+interface Time {
+  hour: number;
+  minute: number;
+}
+
+const MINUTE_MS = 1000 * 60;
+const HOUR_MS = MINUTE_MS * 60;
+const DAY_MS = HOUR_MS * 24;
+
+const COLORS: { id: string; name: string; code: string }[] = [
+  { id: '1', name: 'Lavender', code: '#7986CB' },
+  { id: '2', name: 'Sage', code: '#33B679' },
+  { id: '3', name: 'Grape', code: '#8E24AA' },
+  { id: '4', name: 'Flamingo', code: '#E67C73' },
+  { id: '5', name: 'Banana', code: '#F6BF26' },
+  { id: '6', name: 'Mikan', code: '#F4511E' },
+  { id: '7', name: 'Peacock: Study (Hobby)', code: '#039BE5' },
+  { id: '8', name: 'Graphite: Study', code: '#616161' },
+  { id: '9', name: 'Blueberry: Default', code: '#3F51B5' },
+  { id: '10', name: 'Basil', code: '#0B8043' },
+  { id: '11', name: 'Tomato', code: '#D50000' }
 ];
 
 const COLOR_CODES = {
@@ -29,7 +38,7 @@ const COLOR_CODES = {
   '8': '#616161',
   '9': '#3F51B5',
   '10': '#0B8043',
-  '11': '#D50000',
+  '11': '#D50000'
 };
 
 const app = new Vue({
@@ -48,6 +57,10 @@ const app = new Vue({
       }
     },
     tasks: [{ title: 'prev1' }, { title: 'prev2' }],
+    studyHour: {
+      hour: 0,
+      minute: 0
+    },
     state: {
       hasActivity: false
     },
@@ -57,17 +70,28 @@ const app = new Vue({
   created: function() {
     this.loadAll();
   },
+  filters: {
+    zero_padding: function(v: number) {
+      return ('0' + v).slice(-2);
+    }
+  },
   methods: {
     clearForm: function() {
       this.form.activity.title = '';
       this.form.activity.color = '9';
     },
     loadAll: function() {
-      this.loadTasks();
       this.loadActivity();
+      this.loadTasks();
+      this.calcStudyHours();
     },
     async loadTasks() {
-      const tasks = await callFunction('fetchTasks');
+      const now = new Date().getTime();
+      const tasks = await callFunction(
+        'getTasksFromPlan',
+        now,
+        now + 1000 * 60 * 60 * 24
+      );
       this.tasks = tasks;
     },
     async loadActivity() {
@@ -102,6 +126,21 @@ const app = new Vue({
         endTime: new Date().getTime(),
         color: this.activity.color
       });
+    },
+    async calcStudyHours() {
+      const now = new Date().getTime();
+      const today = now - ((now + 6 * HOUR_MS) % DAY_MS);
+      const acts: any[] = await callFunction(
+        'getTasksFromActivity',
+        today,
+        today + DAY_MS
+      );
+      this.studyHour = msToTime(
+        acts
+          .filter(e => e.color == '8')
+          .map(e => e.endTime - e.startTime)
+          .reduce((acc, cur) => acc + cur)
+      );
     }
   }
 });
@@ -113,4 +152,12 @@ function callFunction(name: string, ...args: any): Promise<any> {
       .withFailureHandler(reject)
       [name](...args);
   });
+}
+
+function msToTime(ms: number): Time {
+  const h = Math.floor(ms / HOUR_MS);
+  return {
+    hour: h,
+    minute: Math.floor((ms - h * HOUR_MS) / MINUTE_MS)
+  };
 }
