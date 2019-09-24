@@ -135,12 +135,12 @@ const app = new Vue({
         today,
         today + DAY_MS
       );
-      this.studyHour = msToTime(
-        acts
-          .filter(e => e.color == '8')
-          .map(e => e.endTime - e.startTime)
-          .reduce((acc, cur) => acc + cur)
-      );
+      const study_ms = acts
+        .filter(e => e.color == '8')
+        .map(e => e.endTime - e.startTime)
+        .reduce((acc, cur) => acc + cur, 0);
+      const lecture_ms = acts.filter(e => e.color == '1').length * HOUR_MS;
+      this.studyHour = msToTime(study_ms + lecture_ms);
     }
   }
 });
