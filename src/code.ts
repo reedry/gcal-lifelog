@@ -18,22 +18,25 @@ function doGet(e: any) {
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
-function getNextTasks(): GoogleAppsScript.Calendar.CalendarEvent[] | undefined {
-  let cal = CalendarApp.getDefaultCalendar();
-  let now = new Date();
-  let oneDayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  let events = cal.getEvents(now, oneDayFromNow);
-  let res: any[] = [];
-  for (let ev of events) {
-    if (!ev.isAllDayEvent()) {
-      res.push(ev);
-    }
-  }
-  if (res.length > 0) {
-    return res;
-  } else {
-    return undefined;
-  }
+function getTasks(
+  cal: GoogleAppsScript.Calendar.Calendar,
+  startTime: number,
+  endTime: number
+): Task[] {
+  let events = cal.getEvents(new Date(startTime), new Date(endTime));
+  return events
+    .filter(function(e) {
+      return !e.isAllDayEvent();
+    })
+    .map(parseTask);
+}
+
+function getTasksFromPlan(startTime: number, endTime: number) {
+  return getTasks(CalendarApp.getDefaultCalendar(), startTime, endTime);
+}
+
+function getTasksFromActivity(startTime: number, endTime: number) {
+  return getTasks(getActivityCalendar(), startTime, endTime);
 }
 
 function parseTask(event: GoogleAppsScript.Calendar.CalendarEvent): Task {
@@ -47,18 +50,6 @@ function parseTask(event: GoogleAppsScript.Calendar.CalendarEvent): Task {
     endTime: event.getEndTime().getTime(),
     color: event.getColor()
   };
-}
-
-function fetchTasks(): Task[] {
-  let res: Task[] = [];
-  const tasks = getNextTasks();
-  if (!tasks) {
-    return res;
-  }
-  for (let task of tasks) {
-    res.push(parseTask(task));
-  }
-  return res;
 }
 
 function getCurrentActivity(): Activity | undefined {
@@ -97,17 +88,9 @@ function deleteCurrentActivity(): void {
   properties.deleteProperty('CURRENT_ACTIVITY');
 }
 
-function testCalApi(): void {
-  let nextTasks = getNextTasks();
-  if (nextTasks == undefined) {
-    Logger.log('Not Found');
-  } else {
-    Logger.log(nextTasks[0].getTitle());
-  }
-}
-
-function testFetchTasks(): void {
-  Logger.log(fetchTasks());
+function testGetTasks(): void {
+  const now = new Date().getTime();
+  Logger.log(getTasksFromPlan(now, now + 1000 * 60 * 60 * 24));
 }
 
 function testGetActivity(): void {
