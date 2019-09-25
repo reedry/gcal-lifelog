@@ -14,9 +14,9 @@ const HOUR_MS = MINUTE_MS * 60;
 const DAY_MS = HOUR_MS * 24;
 
 const COLORS: { id: string; name: string; code: string }[] = [
-  { id: '1', name: 'Lavender', code: '#7986CB' },
+  { id: '1', name: 'Lavender: Lecture', code: '#7986CB' },
   { id: '2', name: 'Sage', code: '#33B679' },
-  { id: '3', name: 'Grape', code: '#8E24AA' },
+  { id: '3', name: 'Grape: Study (Languages)', code: '#8E24AA' },
   { id: '4', name: 'Flamingo', code: '#E67C73' },
   { id: '5', name: 'Banana', code: '#F6BF26' },
   { id: '6', name: 'Mikan', code: '#F4511E' },
@@ -136,7 +136,7 @@ const app = new Vue({
         today + DAY_MS
       );
       const study_ms = acts
-        .filter(e => e.color == '8')
+        .filter(e => e.color == '8' || e.color == '3')
         .map(e => e.endTime - e.startTime)
         .reduce((acc, cur) => acc + cur, 0);
       const lecture_ms = acts.filter(e => e.color == '1').length * HOUR_MS;
