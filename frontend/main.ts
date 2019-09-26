@@ -23,7 +23,7 @@ const COLORS: { id: string; name: string; code: string }[] = [
   { id: '7', name: 'Peacock: Study (Hobby)', code: '#039BE5' },
   { id: '8', name: 'Graphite: Study', code: '#616161' },
   { id: '9', name: 'Blueberry: Default', code: '#3F51B5' },
-  { id: '10', name: 'Basil', code: '#0B8043' },
+  { id: '10', name: 'Basil: Work', code: '#0B8043' },
   { id: '11', name: 'Tomato', code: '#D50000' }
 ];
 
@@ -114,6 +114,7 @@ const app = new Vue({
     stopActivity: function() {
       this.finishActivity();
       this.deleteActivity();
+      this.calcStudyHours();
     },
     async deleteActivity() {
       const res = await callFunction('deleteCurrentActivity');
