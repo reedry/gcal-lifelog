@@ -101,6 +101,7 @@ const app = new Vue({
       } else {
         this.state.hasActivity = true;
         this.activity = activity;
+        this.form.activity.title = this.activity.title;
       }
     },
     async startActivity() {
@@ -122,7 +123,7 @@ const app = new Vue({
     },
     async finishActivity() {
       const res = await callFunction('recordActivity', {
-        title: this.activity.title,
+        title: this.form.activity.title,
         startTime: this.activity.startTime,
         endTime: new Date().getTime(),
         color: this.activity.color
