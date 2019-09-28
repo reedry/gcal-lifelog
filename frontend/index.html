@@ -10,8 +10,25 @@
       <v-content>
         <v-container>
           <v-row justify="center" v-if="state.hasActivity">
-              title: {{ activity.title }}, start: {{ new Date(activity.startTime) }}
-              <v-btn v-on:click="stopActivity">stop</v-btn>
+            <v-col>
+              <v-row justify="center">
+                <v-col cols="12" lg="6">
+                  <v-text-field
+                    v-model="form.activity.title"
+                    placeholder="Type title..."
+                    label="Activity title"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row justify="center">
+                <v-col cols="8" lg="4">
+                  Start: {{ new Date(activity.startTime) }}
+                </v-col>
+                <v-col cols="4" lg="2">
+                  <v-btn v-on:click="stopActivity">Stop</v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
           </v-row>
           <v-row justify="center" v-else>
             <v-col>
