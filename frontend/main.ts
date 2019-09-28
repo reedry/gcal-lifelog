@@ -15,16 +15,16 @@ const DAY_MS = HOUR_MS * 24;
 
 const COLORS: { id: string; name: string; code: string }[] = [
   { id: '1', name: 'Lavender: Lecture', code: '#7986CB' },
-  { id: '2', name: 'Sage', code: '#33B679' },
+  { id: '2', name: 'Sage: Housework', code: '#33B679' },
   { id: '3', name: 'Grape: Study (Languages)', code: '#8E24AA' },
   { id: '4', name: 'Flamingo', code: '#E67C73' },
   { id: '5', name: 'Banana', code: '#F6BF26' },
-  { id: '6', name: 'Mikan', code: '#F4511E' },
+  { id: '6', name: 'Mikan: Sleep', code: '#F4511E' },
   { id: '7', name: 'Peacock: Study (Hobby)', code: '#039BE5' },
   { id: '8', name: 'Graphite: Study', code: '#616161' },
   { id: '9', name: 'Blueberry: Default', code: '#3F51B5' },
   { id: '10', name: 'Basil: Work', code: '#0B8043' },
-  { id: '11', name: 'Tomato', code: '#D50000' }
+  { id: '11', name: 'Tomato: Meal', code: '#D50000' }
 ];
 
 const COLOR_CODES = {
