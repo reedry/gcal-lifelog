@@ -75,6 +75,11 @@
                {{ studyHour.hour | zero_padding }}h
                {{ studyHour.minute | zero_padding }}m
           </v-row>
+          <v-row v-if="!(state.hasActivity || !state.availableIdleHour)" justify="center">
+              Idle Time:
+               {{ idleHour.hour | zero_padding }}h
+               {{ idleHour.minute | zero_padding }}m
+          </v-row>
         </v-container>
       </v-content>
     </v-app>

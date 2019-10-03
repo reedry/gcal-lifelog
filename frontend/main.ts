@@ -61,8 +61,13 @@ const app = new Vue({
       hour: 0,
       minute: 0
     },
+    idleHour: {
+      hour: 0,
+      minute: 0
+    },
     state: {
-      hasActivity: false
+      hasActivity: false,
+      availableIdleHour: false
     },
     colors: COLORS,
     codes: COLOR_CODES
@@ -84,6 +89,7 @@ const app = new Vue({
       this.loadActivity();
       this.loadTasks();
       this.calcStudyHours();
+      this.calcIdleTime();
     },
     async loadTasks() {
       const now = new Date().getTime();
@@ -143,6 +149,15 @@ const app = new Vue({
         .reduce((acc, cur) => acc + cur, 0);
       const lecture_ms = acts.filter(e => e.color == '1').length * HOUR_MS;
       this.studyHour = msToTime(study_ms + lecture_ms);
+    },
+    async calcIdleTime() {
+      const time = await callFunction('calcIdleTime');
+      if (!time) {
+        this.state.availableIdleHour = false;
+        return false;
+      }
+      this.state.availableIdleHour = true;
+      this.idleHour = msToTime(time);
     }
   }
 });
