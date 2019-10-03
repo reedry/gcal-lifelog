@@ -1,5 +1,9 @@
 import { CALENDAR_ID } from './config'
 
+const MINUTE_MS = 1000 * 60;
+const HOUR_MS = MINUTE_MS * 60;
+const DAY_MS = HOUR_MS * 24;
+
 interface Activity {
   title: string;
   startTime: number;
@@ -86,6 +90,44 @@ function getActivityCalendar(): GoogleAppsScript.Calendar.Calendar {
 function deleteCurrentActivity(): void {
   const properties = PropertiesService.getScriptProperties();
   properties.deleteProperty('CURRENT_ACTIVITY');
+}
+
+function getWakeUpTime(): number | undefined {
+  const properties = PropertiesService.getScriptProperties();
+  const wakeup_time = properties.getProperty('WAKEUP_TIME');
+  if (!wakeup_time) {
+    const now = new Date().getTime();
+    const activities = getTasksFromActivity(now - DAY_MS, now);
+    for (const act of activities) {
+      if (act.color == '6' && act.title == '睡眠') {
+        properties.setProperty('WAKEUP_TIME', JSON.stringify(act.endTime));
+        return act.endTime;
+      }
+    }
+    properties.setProperty('WAKEUP_TIME', 'N/A');
+    return undefined;
+  } else if (wakeup_time == 'N/A') {
+    return undefined;
+  } else {
+    return JSON.parse(wakeup_time);
+  }
+}
+
+function calcIdleTime(): number | undefined {
+  const wakeup_time = getWakeUpTime();
+  if (!wakeup_time) {
+    return undefined;
+  }
+  const now = new Date().getTime();
+  const activities = getTasksFromActivity(wakeup_time, now);
+  let res = 0;
+  let current_time = wakeup_time;
+  for (const act of activities) {
+    res += act.startTime - current_time;
+    current_time = act.endTime;
+  }
+  res += now - current_time;
+  return res;
 }
 
 function testGetTasks(): void {
