@@ -104,9 +104,6 @@ function getWakeUpTime(): number | undefined {
         return act.endTime;
       }
     }
-    properties.setProperty('WAKEUP_TIME', 'N/A');
-    return undefined;
-  } else if (wakeup_time == 'N/A') {
     return undefined;
   } else {
     return JSON.parse(wakeup_time);
@@ -128,6 +125,11 @@ function calcIdleTime(): number | undefined {
   }
   res += now - current_time;
   return res;
+}
+
+function resetWakeUpTime(): void {
+  const properties = PropertiesService.getScriptProperties();
+  properties.deleteProperty('WAKEUP_TIME');
 }
 
 function testGetTasks(): void {
