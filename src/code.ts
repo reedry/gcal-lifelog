@@ -1,4 +1,4 @@
-import { CALENDAR_ID } from './config'
+import { CALENDAR_ID } from './config';
 
 const MINUTE_MS = 1000 * 60;
 const HOUR_MS = MINUTE_MS * 60;
@@ -7,6 +7,7 @@ const DAY_MS = HOUR_MS * 24;
 interface Activity {
   title: string;
   startTime: number;
+  color: string;
 }
 
 interface Task {
@@ -16,10 +17,45 @@ interface Task {
   color: string;
 }
 
+interface EventParameter {
+  parameter: {
+    action: string;
+  };
+}
+
 function doGet(e: any) {
   return HtmlService.createHtmlOutputFromFile('index.html')
     .setTitle('LifeLog')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+}
+
+function doPost(e: EventParameter) {
+  if (!e) {
+    return;
+  }
+  const action = e.parameter.action;
+  if (action == 'wake_up') {
+    finishCurrentActivity();
+  } else if (action == 'goto_bed') {
+    const act = {
+      title: '睡眠',
+      startTime: new Date().getTime(),
+      color: '6'
+    };
+    registerCurrentActivity(act);
+  } else if (action == 'depart') {
+    const act = {
+      title: '移動',
+      startTime: new Date().getTime(),
+      color: ''
+    };
+    registerCurrentActivity(act);
+  } else if (action == 'come_home') {
+    finishCurrentActivity();
+  }
+  return ContentService.createTextOutput(JSON.stringify(e)).setMimeType(
+    ContentService.MimeType.JSON
+  );
 }
 
 function getTasks(
@@ -69,6 +105,23 @@ function getCurrentActivity(): Activity | undefined {
 function registerCurrentActivity(activity: Activity): void {
   const properties = PropertiesService.getScriptProperties();
   properties.setProperty('CURRENT_ACTIVITY', JSON.stringify(activity));
+}
+
+function finishCurrentActivity(): void {
+  const cal = getActivityCalendar();
+  const activity = getCurrentActivity();
+  if (!activity) {
+    return;
+  }
+  const event = cal.createEvent(
+    activity.title,
+    new Date(activity.startTime),
+    new Date()
+  );
+  if (activity.color != '') {
+    event.setColor(activity.color);
+  }
+  deleteCurrentActivity();
 }
 
 function recordActivity(activity: Task): void {
